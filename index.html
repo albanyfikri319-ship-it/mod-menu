@@ -1,0 +1,630 @@
+v<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mod Menu by FikriAlbany</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+
+    body{
+      margin:0;
+      height:100vh;
+      overflow:hidden;
+      background:#000;
+      color:white;
+    }
+
+    canvas{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      z-index:-1;
+    }
+
+    .panel{
+      width: 430px;
+      border-radius: 14px;
+      background: rgba(10,10,10,0.95);
+      border: 2px solid red;
+      box-shadow: 0 0 25px red;
+      overflow:hidden;
+      position:absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: fadeIn 0.4s;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translate(-50%, -50%) scale(0.95);}
+      to{opacity:1;transform:translate(-50%, -50%) scale(1);}
+    }
+
+    .topbar{
+      padding:12px;
+      background: linear-gradient(90deg, #ff0000, #550000);
+      text-align:center;
+      font-weight:bold;
+      font-size:15px;
+      letter-spacing:1px;
+      cursor:grab;
+      user-select:none;
+      position:relative;
+    }
+
+    .topbar small{
+      display:block;
+      font-size:11px;
+      opacity:0.8;
+      margin-top:4px;
+    }
+
+    .topBtns{
+      position:absolute;
+      right:10px;
+      top:10px;
+      display:flex;
+      gap:6px;
+    }
+
+    .topBtn{
+      width:24px;
+      height:22px;
+      border-radius:6px;
+      border:1px solid white;
+      background:black;
+      color:white;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:bold;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .topBtn:hover{
+      background:#222;
+    }
+
+    .content{
+      padding:18px;
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:15px;
+      color:#ff4d4d;
+      font-size:18px;
+      text-shadow:0 0 10px red;
+    }
+
+    input{
+      width:100%;
+      padding:11px;
+      border-radius:10px;
+      border:1px solid red;
+      background:black;
+      color:white;
+      outline:none;
+      margin-bottom:12px;
+      transition:0.2s;
+    }
+
+    .btn{
+      width:100%;
+      padding:11px;
+      border:none;
+      border-radius:10px;
+      background:red;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.2s;
+      text-shadow:0 0 6px black;
+      margin-top:8px;
+    }
+
+    .btn:hover{
+      background:darkred;
+    }
+
+    .hidden{
+      display:none;
+    }
+
+    .log{
+      margin-top:15px;
+      background:black;
+      border:1px solid red;
+      border-radius:10px;
+      padding:10px;
+      height:95px;
+      overflow-y:auto;
+      font-size:12px;
+    }
+
+    .log div{
+      margin-bottom:5px;
+      color:#ff5c5c;
+    }
+
+    .loaderText{
+      text-align:center;
+      font-size:14px;
+      margin-bottom:15px;
+      color:#ff4d4d;
+      font-weight:bold;
+      text-shadow:0 0 8px red;
+    }
+
+    .progressBar{
+      width:100%;
+      height:18px;
+      background:#111;
+      border:1px solid red;
+      border-radius:12px;
+      overflow:hidden;
+    }
+
+    .progress{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, red, #ff7777);
+      transition:0.2s;
+      box-shadow:0 0 10px red;
+    }
+
+    .percent{
+      margin-top:10px;
+      text-align:center;
+      font-size:13px;
+      opacity:0.9;
+    }
+
+    .glitch{
+      animation: glitch 0.15s infinite;
+    }
+
+    @keyframes glitch{
+      0% { transform: translate(0px,0px); }
+      25% { transform: translate(2px,-2px); }
+      50% { transform: translate(-2px,2px); }
+      75% { transform: translate(2px,2px); }
+      100% { transform: translate(0px,0px); }
+    }
+
+    .shake{
+      animation: shake 0.25s;
+    }
+
+    @keyframes shake{
+      0%{transform:translate(-50%, -50%) translateX(0);}
+      25%{transform:translate(-50%, -50%) translateX(-10px);}
+      50%{transform:translate(-50%, -50%) translateX(10px);}
+      75%{transform:translate(-50%, -50%) translateX(-10px);}
+      100%{transform:translate(-50%, -50%) translateX(0);}
+    }
+
+    .item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: rgba(255,0,0,0.07);
+      border:1px solid rgba(255,0,0,0.4);
+      padding:12px;
+      border-radius:12px;
+      margin-bottom:12px;
+    }
+
+    .toggle{
+      padding:7px 15px;
+      border-radius:10px;
+      border:1px solid red;
+      background:black;
+      color:white;
+      cursor:pointer;
+      font-weight:bold;
+      width:80px;
+      text-align:center;
+      user-select:none;
+      transition:0.2s;
+    }
+
+    .toggle.on{
+      background:red;
+      box-shadow:0 0 12px red;
+    }
+
+    .logout{
+      background:#111;
+      border:1px solid red;
+    }
+
+    .minimized .content{
+      display:none;
+    }
+
+    .minimized{
+      height:50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <div class="panel" id="panel">
+
+    <div class="topbar" id="dragBar">
+      MOD MENU
+      <small id="subtitle">Login Menu</small>
+
+      <div class="topBtns">
+        <div class="topBtn" onclick="minimize()">_</div>
+        <div class="topBtn" onclick="closeMenu()">X</div>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="content" id="loginBox">
+      <h2>Login Menu</h2>
+
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+
+      <button class="btn" onclick="login()">LOGIN</button>
+
+      <div class="log" id="loginLog">
+        <div>[INFO] Masukkan username & password</div>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="content hidden" id="loadingBox">
+      <h2>Injector</h2>
+
+      <div class="loaderText" id="loaderText">Connecting...</div>
+
+      <div class="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="percent" id="percentText">0%</div>
+    </div>
+
+    <!-- MENU -->
+    <div class="content hidden" id="menuBox">
+      <h2>Mod Menu FF</h2>
+
+      <div class="item">
+        <span>Aimbot Head</span>
+        <div class="toggle" id="headBtn" onclick="aimbotSelect('head')">OFF</div>
+      </div>
+
+      <div class="item">
+        <span>Aimbot Body</span>
+        <div class="toggle" id="bodyBtn" onclick="aimbotSelect('body')">OFF</div>
+      </div>
+
+      <div class="item">
+        <span>Aimbot Leg</span>
+        <div class="toggle" id="legBtn" onclick="aimbotSelect('leg')">OFF</div>
+      </div>
+
+      <button class="btn logout" onclick="disableAll()">DISABLE ALL</button>
+      <button class="btn logout" onclick="logout()">LOGOUT</button>
+
+      <div class="log" id="menuLog">
+        <div>[INFO] Menu siap digunakan</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const validPasswords = ["1215", "0106", "6589", "6778", "3251"];
+    let minimized = false;
+
+    function playSound(type){
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if(type === "click"){
+        osc.type = "square";
+        osc.frequency.value = 600;
+        gain.gain.value = 0.05;
+        osc.start();
+        setTimeout(()=>{osc.stop();ctx.close();}, 60);
+      }
+
+      if(type === "success"){
+        osc.type = "sine";
+        osc.frequency.value = 900;
+        gain.gain.value = 0.08;
+        osc.start();
+        setTimeout(()=>{osc.frequency.value = 1200;}, 80);
+        setTimeout(()=>{osc.stop();ctx.close();}, 180);
+      }
+
+      if(type === "error"){
+        osc.type = "sawtooth";
+        osc.frequency.value = 200;
+        gain.gain.value = 0.09;
+        osc.start();
+        setTimeout(()=>{osc.frequency.value = 150;}, 80);
+        setTimeout(()=>{osc.stop();ctx.close();}, 200);
+      }
+    }
+
+    function addLog(id, text){
+      const log = document.getElementById(id);
+      const time = new Date().toLocaleTimeString();
+      log.innerHTML += `<div>[${time}] ${text}</div>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function login(){
+      playSound("click");
+
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if(user === ""){
+        playSound("error");
+        addLog("loginLog", "Username tidak boleh kosong!");
+        return;
+      }
+
+      if(validPasswords.includes(pass)){
+        playSound("success");
+        addLog("loginLog", "Login berhasil!");
+        document.getElementById("subtitle").innerText = "Injector Loading...";
+
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("loadingBox").classList.remove("hidden");
+
+        startLoading(user);
+      } else {
+        playSound("error");
+        addLog("loginLog", "Password salah!");
+
+        const panel = document.getElementById("panel");
+        panel.classList.add("shake");
+        setTimeout(()=>panel.classList.remove("shake"), 300);
+
+        document.getElementById("password").style.border = "2px solid #ff0000";
+        setTimeout(()=>document.getElementById("password").style.border = "1px solid red", 600);
+      }
+    }
+
+    function startLoading(user){
+      let percent = 0;
+
+      const progressBar = document.getElementById("progress");
+      const percentText = document.getElementById("percentText");
+      const loaderText = document.getElementById("loaderText");
+
+      const steps = [
+        "Connecting to server...",
+        "Bypassing security...",
+        "Injecting modules...",
+        "Loading scripts...",
+        "Finalizing injector..."
+      ];
+
+      let stepIndex = 0;
+
+      const interval = setInterval(() => {
+        percent += Math.floor(Math.random() * 10) + 6;
+        if(percent > 100) percent = 100;
+
+        progressBar.style.width = percent + "%";
+        percentText.innerText = percent + "%";
+
+        if(stepIndex < steps.length){
+          loaderText.innerText = steps[stepIndex];
+          stepIndex++;
+        }
+
+        if(percent > 40 && percent < 80){
+          document.getElementById("panel").classList.add("glitch");
+          setTimeout(()=>document.getElementById("panel").classList.remove("glitch"), 120);
+        }
+
+        if(percent >= 100){
+          clearInterval(interval);
+
+          setTimeout(() => {
+            document.getElementById("subtitle").innerText = "Mod Menu FF";
+            document.getElementById("loadingBox").classList.add("hidden");
+            document.getElementById("menuBox").classList.remove("hidden");
+
+            addLog("menuLog", "Welcome " + user);
+            addLog("menuLog", "Injector success!");
+          }, 700);
+        }
+      }, 250);
+    }
+
+    function aimbotSelect(mode){
+      playSound("click");
+
+      const head = document.getElementById("headBtn");
+      const body = document.getElementById("bodyBtn");
+      const leg  = document.getElementById("legBtn");
+
+      head.innerText = "OFF"; head.classList.remove("on");
+      body.innerText = "OFF"; body.classList.remove("on");
+      leg.innerText  = "OFF"; leg.classList.remove("on");
+
+      if(mode === "head"){
+        head.innerText = "ON";
+        head.classList.add("on");
+        addLog("menuLog", "Aimbot Head ON");
+      }
+
+      if(mode === "body"){
+        body.innerText = "ON";
+        body.classList.add("on");
+        addLog("menuLog", "Aimbot Body ON");
+      }
+
+      if(mode === "leg"){
+        leg.innerText = "ON";
+        leg.classList.add("on");
+        addLog("menuLog", "Aimbot Leg ON");
+      }
+    }
+
+    function disableAll(){
+      playSound("click");
+
+      const head = document.getElementById("headBtn");
+      const body = document.getElementById("bodyBtn");
+      const leg  = document.getElementById("legBtn");
+
+      head.innerText = "OFF"; head.classList.remove("on");
+      body.innerText = "OFF"; body.classList.remove("on");
+      leg.innerText  = "OFF"; leg.classList.remove("on");
+
+      addLog("menuLog", "Semua fitur dimatikan (Disable All)");
+    }
+
+    function logout(){
+      playSound("click");
+
+      document.getElementById("menuBox").classList.add("hidden");
+      document.getElementById("loginBox").classList.remove("hidden");
+      document.getElementById("subtitle").innerText = "Login Menu";
+
+      addLog("loginLog", "Logout berhasil.");
+
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    function minimize(){
+      playSound("click");
+
+      const panel = document.getElementById("panel");
+      minimized = !minimized;
+
+      if(minimized){
+        panel.classList.add("minimized");
+      }else{
+        panel.classList.remove("minimized");
+      }
+    }
+
+    function closeMenu(){
+      playSound("click");
+      document.getElementById("panel").style.display = "none";
+    }
+
+    // DRAG MENU (PC)
+    const panel = document.getElementById("panel");
+    const dragBar = document.getElementById("dragBar");
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    dragBar.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - panel.offsetLeft;
+      offsetY = e.clientY - panel.offsetTop;
+      dragBar.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      dragBar.style.cursor = "grab";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if(isDragging){
+        panel.style.left = (e.clientX - offsetX) + "px";
+        panel.style.top = (e.clientY - offsetY) + "px";
+        panel.style.transform = "none";
+      }
+    });
+
+    // DRAG MENU (HP)
+    dragBar.addEventListener("touchstart", (e) => {
+      isDragging = true;
+      let touch = e.touches[0];
+      offsetX = touch.clientX - panel.offsetLeft;
+      offsetY = touch.clientY - panel.offsetTop;
+    });
+
+    document.addEventListener("touchend", () => {
+      isDragging = false;
+    });
+
+    document.addEventListener("touchmove", (e) => {
+      if(isDragging){
+        let touch = e.touches[0];
+        panel.style.left = (touch.clientX - offsetX) + "px";
+        panel.style.top = (touch.clientY - offsetY) + "px";
+        panel.style.transform = "none";
+      }
+    });
+
+    // PARTICLE BACKGROUND
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+
+    let particles = [];
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createParticles(){
+      particles = [];
+      for(let i=0;i<60;i++){
+        particles.push({
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          r: Math.random()*2 + 1,
+          vx: (Math.random()*0.6) - 0.3,
+          vy: (Math.random()*0.6) - 0.3
+        });
+      }
+    }
+    createParticles();
+
+    function drawParticles(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle="rgba(255,0,0,0.7)";
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      });
+
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+  </script>
+
+</body>
+</html>
